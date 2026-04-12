@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GIS Facility Management — UX Case Study | Naveen Prasath Kanakaraj</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FAFAF8;--surface:#FFFFFF;--text:#1A1A18;--text-muted:#6B6B63;--text-light:#9C9C94;
+  --accent:#1D7A6A;--accent-light:#E1F5EE;--accent-dark:#0F5E50;
+  --coral:#E8593C;--coral-light:#FAECE7;
+  --blue:#378ADD;--blue-light:#E6F1FB;
+  --green:#639922;--green-light:#EAF3DE;
+  --amber:#EF9F27;--amber-light:#FAEEDA;
+  --purple:#7F77DD;--purple-light:#EEEDFE;
+  --red:#E24B4A;--red-light:#FCEBEB;
+  --teal:#0BA5A5;--teal-light:#E6F7F7;
+  --border:#E8E8E2;
+  --radius:12px;--radius-sm:8px;--radius-lg:20px;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-display:'DM Serif Display',Georgia,serif;
+  --max-w:1120px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(16px);background:rgba(250,250,248,.85);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:var(--max-w);margin:0 auto;padding:14px 32px;display:flex;justify-content:space-between;align-items:center}
+.nav-name{font-weight:600;font-size:15px;letter-spacing:-.02em}
+.nav-links{display:flex;gap:28px}
+.nav-links a{font-size:13px;color:var(--text-muted);text-decoration:none;transition:color .2s;font-weight:500}
+.nav-links a:hover{color:var(--text)}
+
+.hero{padding:140px 32px 60px;max-width:var(--max-w);margin:0 auto}
+.hero-label{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);color:var(--accent-dark);font-size:12px;font-weight:600;padding:6px 14px;border-radius:100px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:24px}
+.hero-label span{width:6px;height:6px;background:var(--accent);border-radius:50%}
+.hero h1{font-family:var(--font-display);font-size:clamp(36px,5vw,56px);line-height:1.1;letter-spacing:-.03em;margin-bottom:20px;max-width:720px}
+.hero-sub{font-size:18px;color:var(--text-muted);max-width:620px;line-height:1.6;margin-bottom:40px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:32px}
+.hero-meta-item{display:flex;flex-direction:column;gap:4px}
+.hero-meta-item .label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);font-weight:600}
+.hero-meta-item .value{font-size:14px;font-weight:500}
+
+.section{padding:80px 32px;max-width:var(--max-w);margin:0 auto}
+.section-divider{width:100%;height:1px;background:var(--border);max-width:var(--max-w);margin:0 auto}
+.section-num{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.section h2{font-family:var(--font-display);font-size:clamp(28px,3.5vw,40px);line-height:1.15;letter-spacing:-.02em;margin-bottom:20px}
+.section p.lead{font-size:17px;color:var(--text-muted);max-width:640px;line-height:1.7}
+
+/* FULL-WIDTH IMAGE */
+.full-img{margin-top:40px;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);box-shadow:0 4px 40px rgba(0,0,0,.06)}
+.full-img img{width:100%;display:block}
+.full-img .caption{padding:16px 24px;background:var(--surface);font-size:13px;color:var(--text-muted);border-top:1px solid var(--border)}
+
+/* PHONE SHOWCASE */
+.showcase{padding:0 32px 20px;max-width:var(--max-w);margin:0 auto}
+.phone-row{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+.phone-frame{width:200px;flex-shrink:0;background:var(--surface);border-radius:28px;padding:8px;box-shadow:0 4px 40px rgba(0,0,0,.08),0 1px 3px rgba(0,0,0,.04);transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.phone-frame:hover{transform:translateY(-8px)}
+.phone-frame img{width:100%;border-radius:20px;display:block}
+.phone-caption{text-align:center;margin-top:12px;font-size:12px;color:var(--text-muted);font-weight:500;padding-bottom:4px}
+
+/* OVERVIEW GRID */
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:40px}
+.overview-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px}
+.overview-card .card-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);font-weight:600;margin-bottom:8px}
+.overview-card .card-value{font-size:15px;font-weight:500;line-height:1.5}
+
+/* CHALLENGE GRID */
+.challenge-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px}
+@media(max-width:680px){.challenge-grid{grid-template-columns:1fr}}
+.challenge-card{border-radius:var(--radius);padding:32px;border:1px solid}
+.challenge-card h3{font-size:16px;font-weight:600;margin-bottom:12px}
+.challenge-card ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.challenge-card li{font-size:14px;line-height:1.6;padding-left:20px;position:relative}
+.challenge-card li::before{content:'';position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%}
+.challenge-card.problem{background:var(--coral-light);border-color:#F0997B44}
+.challenge-card.problem h3{color:#993C1D}
+.challenge-card.problem li{color:#712B13}
+.challenge-card.problem li::before{background:#D85A30}
+.challenge-card.solution{background:var(--accent-light);border-color:#5DCAA544}
+.challenge-card.solution h3{color:#0F6E56}
+.challenge-card.solution li{color:#085041}
+.challenge-card.solution li::before{background:#1D9E75}
+
+/* MODULE CARDS */
+.module-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+@media(max-width:768px){.module-grid{grid-template-columns:1fr}}
+.module-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:transform .3s,box-shadow .3s}
+.module-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.08)}
+.module-img{width:100%;aspect-ratio:16/10;overflow:hidden;background:#f0f0eb}
+.module-img img{width:100%;height:100%;object-fit:cover;object-position:top}
+.module-body{padding:24px 28px}
+.module-tag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;margin-bottom:10px}
+.module-body h3{font-size:18px;font-weight:600;margin-bottom:8px}
+.module-body p{font-size:14px;color:var(--text-muted);line-height:1.6}
+
+/* ANNOTATION */
+.annotated{margin-top:48px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+@media(max-width:768px){.annotated{grid-template-columns:1fr}}
+.annotated-img{border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.annotated-img img{width:100%;display:block}
+.annotation-list{display:flex;flex-direction:column;gap:16px;padding-top:8px}
+.annotation-item{display:flex;gap:14px;align-items:flex-start}
+.annotation-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.annotation-text h4{font-size:14px;font-weight:600;margin-bottom:2px}
+.annotation-text p{font-size:13px;color:var(--text-muted);line-height:1.5}
+
+/* DESIGN DECISIONS */
+.decisions-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:40px}
+.decision-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px}
+.decision-card .icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px}
+.decision-card h4{font-size:15px;font-weight:600;margin-bottom:6px}
+.decision-card p{font-size:13px;color:var(--text-muted);line-height:1.55}
+
+/* METRICS */
+.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:40px}
+@media(max-width:680px){.metrics-row{grid-template-columns:1fr 1fr}}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center}
+.metric-card .metric-value{font-family:var(--font-display);font-size:36px;line-height:1;margin-bottom:6px}
+.metric-card .metric-label{font-size:12px;color:var(--text-muted);font-weight:500}
+
+/* REFLECTION */
+.reflection-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px}
+@media(max-width:680px){.reflection-grid{grid-template-columns:1fr}}
+.reflection-card{border-radius:var(--radius);padding:28px;border:1px solid}
+.reflection-card h4{font-size:15px;font-weight:600;margin-bottom:8px}
+.reflection-card p{font-size:14px;line-height:1.6}
+.reflection-card.learn{background:var(--accent-light);border-color:rgba(29,122,106,.15)}
+.reflection-card.learn h4{color:var(--accent-dark)}
+.reflection-card.learn p{color:#0F5E50}
+.reflection-card.hf{background:var(--purple-light);border-color:rgba(127,119,221,.15)}
+.reflection-card.hf h4{color:#534AB7}
+.reflection-card.hf p{color:#3C3489}
+
+/* FOOTER */
+.footer-cta{padding:80px 32px;text-align:center;max-width:var(--max-w);margin:0 auto}
+.footer-cta h2{font-family:var(--font-display);font-size:clamp(24px,3vw,36px);margin-bottom:16px}
+.footer-cta p{color:var(--text-muted);font-size:16px;margin-bottom:32px}
+.cta-buttons{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:100px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s}
+.btn-primary{background:var(--text);color:var(--bg)}
+.btn-primary:hover{background:var(--accent)}
+.btn-outline{background:transparent;color:var(--text);border:1.5px solid var(--border)}
+.btn-outline:hover{border-color:var(--text)}
+footer{border-top:1px solid var(--border);padding:24px 32px;text-align:center;font-size:13px;color:var(--text-light)}
+
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+@media(max-width:480px){.hero{padding:120px 20px 50px}.section{padding:60px 20px}.nav-links{display:none}.metrics-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-name" style="text-decoration:none;color:inherit">Naveen Prasath K.</a>
+    <div class="nav-links">
+      <a href="../../index.html">Home</a>
+      <a href="#overview">Overview</a>
+      <a href="#challenge">Challenge</a>
+      <a href="#modules">Modules</a>
+      <a href="#decisions">Decisions</a>
+      <a href="#results">Results</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero fade-in">
+  <div class="hero-label"><span></span>UX Case Study</div>
+  <h1>GIS — Location-based Facility Management Platform</h1>
+  <p class="hero-sub">Designing a map-centric mobile experience for real-time technician tracking, workforce attendance monitoring, and asset management across multi-building facilities.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><span class="label">Role</span><span class="value">Lead UX Designer</span></div>
+    <div class="hero-meta-item"><span class="label">Company</span><span class="value">Nanosoft Engineers</span></div>
+    <div class="hero-meta-item"><span class="label">Duration</span><span class="value">Aug 2022 — Oct 2023</span></div>
+    <div class="hero-meta-item"><span class="label">Tools</span><span class="value">Figma</span></div>
+    <div class="hero-meta-item"><span class="label">Platform</span><span class="value">iOS & Android</span></div>
+    <div class="hero-meta-item"><span class="label">Complexity</span><span class="value">87+ screens, 4 modules</span></div>
+  </div>
+</header>
+
+<!-- PHONE SHOWCASE -->
+<section class="showcase fade-in">
+  <div class="phone-row">
+    <div class="phone-frame">
+      <img src="gis-overview.png" alt="GIS map view with location markers">
+      <div class="phone-caption">Map tracking</div>
+    </div>
+    <div class="phone-frame">
+      <img src="gis-technician.png" alt="Technician reach list view">
+      <div class="phone-caption">Technician reach</div>
+    </div>
+    <div class="phone-frame">
+      <img src="gis-attendance.png" alt="Self-service attendance">
+      <div class="phone-caption">Attendance</div>
+    </div>
+    <div class="phone-frame">
+      <img src="gis-assets.png" alt="Asset management list">
+      <div class="phone-caption">Asset management</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 1: OVERVIEW -->
+<section class="section fade-in" id="overview">
+  <div class="section-num">01 — Project overview</div>
+  <h2>Making complex spatial data usable</h2>
+  <p class="lead">GIS is a location-intelligence module within Nanosoft's enterprise facility management platform. It enables property managers to visualise technician locations, monitor workforce attendance in real-time, and manage physical assets across multiple buildings — all through map-based interfaces on mobile.</p>
+
+  <div class="overview-grid">
+    <div class="overview-card">
+      <div class="card-label">Users</div>
+      <div class="card-value">Property managers, operations supervisors, field technicians, facilities teams</div>
+    </div>
+    <div class="overview-card">
+      <div class="card-label">Domain</div>
+      <div class="card-value">Enterprise facility management — multi-building property operations with field workforce</div>
+    </div>
+    <div class="overview-card">
+      <div class="card-label">My responsibilities</div>
+      <div class="card-value">Information architecture, map UX design, data visualisation, interaction design, component system, developer handoff</div>
+    </div>
+    <div class="overview-card">
+      <div class="card-label">Key challenge</div>
+      <div class="card-value">Translating dense operational data — locations, statuses, SLAs, work orders — into a scannable mobile experience</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 2: CHALLENGE -->
+<section class="section fade-in" id="challenge">
+  <div class="section-num">02 — The design challenge</div>
+  <h2>Spatial data is hard to get right on mobile</h2>
+  <p class="lead">Facility managers needed to answer critical operational questions quickly: Where are my technicians? Who's on-site? Which assets need attention? The existing workflow relied on phone calls and spreadsheets.</p>
+
+  <div class="challenge-grid">
+    <div class="challenge-card problem">
+      <h3>Before — the pain</h3>
+      <ul>
+        <li>No visibility into technician locations — managers relied on phone calls to check field worker status</li>
+        <li>Attendance tracking was paper-based with no geolocation verification</li>
+        <li>Asset information was scattered across spreadsheets with no spatial context</li>
+        <li>Work order SLA compliance was tracked manually, leading to missed deadlines</li>
+        <li>Multiple disconnected systems for different operational needs</li>
+      </ul>
+    </div>
+    <div class="challenge-card solution">
+      <h3>After — the solution</h3>
+      <ul>
+        <li>Interactive map with colour-coded markers showing real-time technician positions and statuses</li>
+        <li>GPS-verified attendance with check-in/check-out timestamps and last-seen locations on maps</li>
+        <li>Asset inventory linked to specific buildings and floors, with maintenance and cost data</li>
+        <li>Work order cards with SLA hours, utilised hours, and completion percentage at a glance</li>
+        <li>A single unified mobile app covering all four modules</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 3: MODULES -->
+<section class="section fade-in" id="modules">
+  <div class="section-num">03 — The four modules</div>
+  <h2>One platform, four interconnected views</h2>
+  <p class="lead">I designed each module to serve a distinct operational need while maintaining a consistent design language and shared search/filter patterns across all views.</p>
+
+  <div class="module-grid">
+    <!-- Module 1: Map & Tracking -->
+    <div class="module-card">
+      <div class="module-img">
+        <img src="gis-overview.png" alt="Map interface with location markers">
+      </div>
+      <div class="module-body">
+        <div class="module-tag" style="background:var(--blue-light);color:#185FA5">Core module</div>
+        <h3>Map-based tracking</h3>
+        <p>Interactive map interface with colour-coded triangular markers (green = active, red = alert, blue = idle) showing technician and asset positions. Includes onboarding flow, compass/radar view for proximity, and building-level drill-down navigation.</p>
+      </div>
+    </div>
+
+    <!-- Module 2: Technician Reach -->
+    <div class="module-card">
+      <div class="module-img">
+        <img src="gis-technician.png" alt="Technician reach module with work orders">
+      </div>
+      <div class="module-body">
+        <div class="module-tag" style="background:var(--accent-light);color:var(--accent-dark)">Workforce</div>
+        <h3>Technician reach</h3>
+        <p>Real-time workforce monitoring with online/offline status indicators, performance metrics (completed, assigned, utilised hours, required hours), and drill-down to individual work order history with SLA tracking across PPMEs, Analysts, and Execution categories.</p>
+      </div>
+    </div>
+
+    <!-- Module 3: Attendance -->
+    <div class="module-card">
+      <div class="module-img">
+        <img src="gis-attendance.png" alt="Self-service attendance module">
+      </div>
+      <div class="module-body">
+        <div class="module-tag" style="background:var(--green-light);color:#3B6D11">Operations</div>
+        <h3>Self-service attendance</h3>
+        <p>GPS-verified attendance tracking with present/absent filtering, check-in and check-out timestamps, total trip data, and an employee detail view with "Last Seen" and "Checked In" markers plotted on Google Maps for location verification.</p>
+      </div>
+    </div>
+
+    <!-- Module 4: Assets -->
+    <div class="module-card">
+      <div class="module-img">
+        <img src="gis-assets.png" alt="Asset management module">
+      </div>
+      <div class="module-body">
+        <div class="module-tag" style="background:var(--amber-light);color:#854F0B">Assets</div>
+        <h3>Asset management</h3>
+        <p>Building-level asset inventory showing equipment type, location (building/floor/room), operational status, maintenance data, and cost tracking (extra hours, extra costs). Searchable and filterable with consistent card-based layout.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 4: DEEP DIVE - Technician Reach -->
+<section class="section fade-in">
+  <div class="section-num">04 — Interaction deep-dive</div>
+  <h2>Technician reach — data-dense, scannable design</h2>
+  <p class="lead">The Technician Reach module was the most complex design challenge: each technician card needed to surface 6+ data points without overwhelming the user.</p>
+
+  <div class="annotated">
+    <div class="annotated-img">
+      <img src="gis-technician.png" alt="Technician reach module annotated">
+    </div>
+    <div class="annotation-list">
+      <div class="annotation-item">
+        <div class="annotation-num">1</div>
+        <div class="annotation-text">
+          <h4>Filter tabs: All / Online / Offline</h4>
+          <p>Segmented control at the top lets managers instantly filter by technician availability. Counts in each tab (All 24, Online 17, Offline 09) provide at-a-glance workforce overview.</p>
+        </div>
+      </div>
+      <div class="annotation-item">
+        <div class="annotation-num">2</div>
+        <div class="annotation-text">
+          <h4>Colour-coded status badges</h4>
+          <p>Green "Online" and red "Offline" badges on each technician card use the universal traffic-light metaphor — no learning curve needed for new users.</p>
+        </div>
+      </div>
+      <div class="annotation-item">
+        <div class="annotation-num">3</div>
+        <div class="annotation-text">
+          <h4>Multi-metric card layout</h4>
+          <p>Each card surfaces: M.O Completed, M.O Assigned, Utilized Hrs, Required Hrs, Sh.Mon — all visible without tapping. Designed to reduce cognitive load by grouping related metrics.</p>
+        </div>
+      </div>
+      <div class="annotation-item">
+        <div class="annotation-num">4</div>
+        <div class="annotation-text">
+          <h4>Progressive disclosure to details</h4>
+          <p>Tapping a technician reveals their full profile, work order history, SLA compliance, and category breakdown (PPMEs, Analysts, Execution) — keeping the list view clean.</p>
+        </div>
+      </div>
+      <div class="annotation-item">
+        <div class="annotation-num">5</div>
+        <div class="annotation-text">
+          <h4>SLA hours as colour-coded indicators</h4>
+          <p>SLA Hours and Utilized Hrs use green/red colouring to show at-risk vs on-track work orders — enabling managers to prioritise attention without reading every number.</p>
+        </div>
+      </div>
+      <div class="annotation-item">
+        <div class="annotation-num">6</div>
+        <div class="annotation-text">
+          <h4>Consistent search + filter pattern</h4>
+          <p>Search bar with filter icon appears identically across all modules — once a user learns the pattern in one module, it transfers to every other module.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 5: DESIGN DECISIONS -->
+<section class="section fade-in" id="decisions">
+  <div class="section-num">05 — Design thinking</div>
+  <h2>Key decisions and their rationale</h2>
+
+  <div class="decisions-grid">
+    <div class="decision-card">
+      <div class="icon" style="background:var(--blue-light)">📍</div>
+      <h4>Triangular map markers</h4>
+      <p>I used colour-coded triangular markers (not pins) to differentiate this from consumer maps. Triangles convey directionality and status — green for active, red for alert, blue for idle — and remain distinguishable at small sizes on mobile.</p>
+    </div>
+    <div class="decision-card">
+      <div class="icon" style="background:var(--accent-light)">🔍</div>
+      <h4>Search criteria as entry point</h4>
+      <p>Each module starts with a Search Criteria panel (Select Type, category dropdowns, online/offline toggle). This pre-filters data before loading, preventing information overload and reducing server calls on mobile networks.</p>
+    </div>
+    <div class="decision-card">
+      <div class="icon" style="background:var(--green-light)">📊</div>
+      <h4>Data-dense cards over tables</h4>
+      <p>Instead of tables (which don't work on mobile), I designed horizontally-structured cards that pack 6+ data points into each row. Colour and position create scannable visual patterns without requiring users to read every label.</p>
+    </div>
+    <div class="decision-card">
+      <div class="icon" style="background:var(--amber-light)">🗺️</div>
+      <h4>Dual-marker location verification</h4>
+      <p>The attendance detail view shows both "Checked In" (red marker) and "Last Seen" (green marker) on the same map. This dual-marker pattern instantly reveals whether an employee is still at their check-in location — a key operational question.</p>
+    </div>
+    <div class="decision-card">
+      <div class="icon" style="background:var(--purple-light)">🏗️</div>
+      <h4>Unified component system</h4>
+      <p>I built a shared component library across all four modules: teal header bars, consistent search patterns, avatar + name + metrics cards, and a common date range picker. This reduced design-to-development handoff time and ensured visual coherence.</p>
+    </div>
+    <div class="decision-card">
+      <div class="icon" style="background:var(--coral-light)">⚡</div>
+      <h4>Onboarding through progressive steps</h4>
+      <p>The app opens with a multi-screen onboarding flow that introduces the GIS concept before map interaction. Each step builds on the previous, preventing new users from feeling overwhelmed by a full map view on first launch.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 6: RESULTS -->
+<section class="section fade-in" id="results">
+  <div class="section-num">06 — Results & impact</div>
+  <h2>Measurable outcomes</h2>
+
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="metric-value" style="color:var(--accent)">87+</div>
+      <div class="metric-label">Unique screens designed end-to-end</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value" style="color:var(--blue)">4</div>
+      <div class="metric-label">Integrated operational modules</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value" style="color:var(--coral)">30%</div>
+      <div class="metric-label">Reduction in cognitive load through structured data display</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value" style="color:var(--green)">20%</div>
+      <div class="metric-label">Faster response time for operational decisions</div>
+    </div>
+  </div>
+
+  <!-- Reflection -->
+  <div class="reflection-grid">
+    <div class="reflection-card learn">
+      <h4>What I learned</h4>
+      <p>Map interfaces demand a fundamentally different approach from form-based apps. The biggest lesson was learning to use visual encoding (colour, shape, position) as the primary information channel, with text as a secondary reference. This dramatically reduced the cognitive cost of scanning operational data.</p>
+    </div>
+    <div class="reflection-card learn">
+      <h4>What I'd improve</h4>
+      <p>I'd invest more in interactive map prototyping to test marker density and zoom-level transitions. I'd also explore clustering algorithms for scenarios with 50+ technicians, and add heatmap overlays to visualise workload distribution across buildings.</p>
+    </div>
+    <div class="reflection-card hf">
+      <h4>Human factors perspective</h4>
+      <p>This project directly exercised alarm management principles — using colour (green/red/blue), position, and size to create an at-a-glance status system. The same visual hierarchy principles apply to medical device alarm displays and industrial control room HMIs.</p>
+    </div>
+    <div class="reflection-card hf">
+      <h4>Complex data visualisation</h4>
+      <p>Translating multi-dimensional operational data (location + status + time + SLA + cost) into scannable mobile interfaces is directly transferable to MedTech dashboards, clinical decision support tools, and any domain where data density meets mobile constraints.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FOOTER CTA -->
+<section class="footer-cta fade-in">
+  <h2>Let's work together</h2>
+  <p>I'm currently looking for UX, Human Factors, and Product Design roles.</p>
+  <div class="cta-buttons">
+    <a href="mailto:naveenprasath479@gmail.com" class="btn btn-primary">Get in touch →</a>
+    <a href="https://linkedin.com/in/naveen-prasath-kanakaraj-961132168" class="btn btn-outline" target="_blank" rel="noopener">LinkedIn ↗</a>
+  </div>
+</section>
+
+<footer>
+  <p>Designed & built by Naveen Prasath Kanakaraj — 2026</p>
+</footer>
+
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>

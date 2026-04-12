@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Helpdesk — UX Case Study | Naveen Prasath Kanakaraj</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FAFAF8;--bg-dark:#0E0E0C;--surface:#FFFFFF;--surface-dark:#1A1A18;
+  --text:#1A1A18;--text-muted:#6B6B63;--text-light:#9C9C94;
+  --accent:#0BA5A5;--accent-light:#E6F7F7;--accent-dark:#088585;
+  --coral:#E8593C;--coral-light:#FAECE7;
+  --blue:#378ADD;--blue-light:#E6F1FB;
+  --green:#639922;--green-light:#EAF3DE;
+  --amber:#EF9F27;--amber-light:#FAEEDA;
+  --purple:#7F77DD;--purple-light:#EEEDFE;
+  --border:#E8E8E2;--border-dark:#2C2C2A;
+  --radius:12px;--radius-sm:8px;--radius-lg:20px;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-display:'DM Serif Display',Georgia,serif;
+  --max-w:1120px;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+
+/* ─── NAV ─── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(16px);background:rgba(250,250,248,.85);border-bottom:1px solid var(--border);transition:transform .3s}
+.nav-inner{max-width:var(--max-w);margin:0 auto;padding:14px 32px;display:flex;justify-content:space-between;align-items:center}
+.nav-name{font-weight:600;font-size:15px;letter-spacing:-.02em}
+.nav-links{display:flex;gap:28px}
+.nav-links a{font-size:13px;color:var(--text-muted);text-decoration:none;transition:color .2s;font-weight:500}
+.nav-links a:hover{color:var(--text)}
+
+/* ─── HERO ─── */
+.hero{padding:140px 32px 80px;max-width:var(--max-w);margin:0 auto}
+.hero-label{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);color:var(--accent-dark);font-size:12px;font-weight:600;padding:6px 14px;border-radius:100px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:24px}
+.hero-label span{width:6px;height:6px;background:var(--accent);border-radius:50%}
+.hero h1{font-family:var(--font-display);font-size:clamp(36px,5vw,56px);line-height:1.1;letter-spacing:-.03em;margin-bottom:20px;max-width:700px}
+.hero-sub{font-size:18px;color:var(--text-muted);max-width:580px;line-height:1.6;margin-bottom:40px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:32px}
+.hero-meta-item{display:flex;flex-direction:column;gap:4px}
+.hero-meta-item .label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);font-weight:600}
+.hero-meta-item .value{font-size:14px;font-weight:500}
+
+/* ─── PHONE SHOWCASE ─── */
+.showcase{padding:0 32px 80px;max-width:var(--max-w);margin:0 auto}
+.phone-row{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+.phone-frame{width:220px;flex-shrink:0;background:var(--surface);border-radius:28px;padding:8px;box-shadow:0 4px 40px rgba(0,0,0,.08),0 1px 3px rgba(0,0,0,.04);transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.phone-frame:hover{transform:translateY(-8px)}
+.phone-frame img{width:100%;border-radius:20px;display:block}
+.phone-caption{text-align:center;margin-top:12px;font-size:12px;color:var(--text-muted);font-weight:500;padding-bottom:4px}
+
+/* ─── SECTIONS ─── */
+.section{padding:80px 32px;max-width:var(--max-w);margin:0 auto}
+.section-divider{width:100%;height:1px;background:var(--border);max-width:var(--max-w);margin:0 auto}
+.section-num{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.section h2{font-family:var(--font-display);font-size:clamp(28px,3.5vw,40px);line-height:1.15;letter-spacing:-.02em;margin-bottom:20px}
+.section p.lead{font-size:17px;color:var(--text-muted);max-width:640px;line-height:1.7}
+
+/* ─── OVERVIEW GRID ─── */
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:40px}
+.overview-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px}
+.overview-card .card-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);font-weight:600;margin-bottom:8px}
+.overview-card .card-value{font-size:15px;font-weight:500;line-height:1.5}
+
+/* ─── PROBLEM / SOLUTION ─── */
+.ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px}
+@media(max-width:680px){.ps-grid{grid-template-columns:1fr}}
+.ps-card{border-radius:var(--radius);padding:32px;position:relative;overflow:hidden}
+.ps-card.problem{background:var(--coral-light);border:1px solid #F0997B44}
+.ps-card.solution{background:var(--accent-light);border:1px solid #5DCAA544}
+.ps-card h3{font-size:16px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.ps-card.problem h3{color:#993C1D}
+.ps-card.solution h3{color:#0F6E56}
+.ps-card ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.ps-card li{font-size:14px;line-height:1.6;padding-left:20px;position:relative}
+.ps-card.problem li{color:#712B13}
+.ps-card.solution li{color:#085041}
+.ps-card li::before{content:'';position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%}
+.ps-card.problem li::before{background:#D85A30}
+.ps-card.solution li::before{background:#1D9E75}
+
+/* ─── PERSONA ─── */
+.persona-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px;margin-top:40px;display:grid;grid-template-columns:200px 1fr;gap:40px;align-items:start}
+@media(max-width:680px){.persona-card{grid-template-columns:1fr}}
+.persona-avatar{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--accent-light),var(--blue-light));display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:700;color:var(--accent-dark);font-family:var(--font-display)}
+.persona-details h3{font-size:20px;font-weight:600;margin-bottom:4px}
+.persona-details .role{font-size:14px;color:var(--text-muted);margin-bottom:16px}
+.persona-details .quote{font-style:italic;font-size:15px;color:var(--text-muted);border-left:3px solid var(--accent);padding-left:16px;margin-bottom:20px}
+.persona-traits{display:flex;flex-wrap:wrap;gap:8px}
+.persona-traits .trait{background:var(--accent-light);color:var(--accent-dark);font-size:12px;font-weight:600;padding:5px 12px;border-radius:100px}
+
+/* ─── FLOW DIAGRAM ─── */
+.flow-container{margin-top:40px;overflow-x:auto;padding:20px 0}
+.flow{display:flex;align-items:center;gap:0;min-width:min-content}
+.flow-step{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;min-width:130px;text-align:center;flex-shrink:0;transition:border-color .2s,box-shadow .2s}
+.flow-step:hover{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+.flow-step .step-num{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.flow-step .step-name{font-size:13px;font-weight:600}
+.flow-step .step-desc{font-size:11px;color:var(--text-muted);margin-top:4px}
+.flow-arrow{width:32px;height:2px;background:var(--border);position:relative;flex-shrink:0}
+.flow-arrow::after{content:'';position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:6px solid var(--border)}
+
+/* ─── SCREEN GALLERY ─── */
+.screen-section{margin-top:48px}
+.screen-section h3{font-size:18px;font-weight:600;margin-bottom:8px}
+.screen-section .screen-desc{font-size:14px;color:var(--text-muted);margin-bottom:24px;max-width:560px}
+.screen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+.screen-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:transform .3s,box-shadow .3s}
+.screen-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.08)}
+.screen-card img{width:100%;display:block}
+.screen-card .screen-label{padding:12px 16px;font-size:12px;font-weight:600;color:var(--text-muted)}
+
+/* ─── ANNOTATION ─── */
+.annotated{margin-top:48px;display:grid;grid-template-columns:280px 1fr;gap:40px;align-items:start}
+@media(max-width:768px){.annotated{grid-template-columns:1fr}}
+.annotated-phone{width:280px;background:var(--surface);border-radius:28px;padding:8px;box-shadow:0 4px 40px rgba(0,0,0,.08)}
+.annotated-phone img{width:100%;border-radius:20px;display:block}
+.annotation-list{display:flex;flex-direction:column;gap:16px;padding-top:12px}
+.annotation-item{display:flex;gap:14px;align-items:flex-start}
+.annotation-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.annotation-text h4{font-size:14px;font-weight:600;margin-bottom:2px}
+.annotation-text p{font-size:13px;color:var(--text-muted);line-height:1.5}
+
+/* ─── DESIGN SYSTEM ─── */
+.ds-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:40px}
+@media(max-width:768px){.ds-grid{grid-template-columns:1fr}}
+.ds-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+.ds-card h4{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-light);margin-bottom:16px}
+.color-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.color-swatch{width:36px;height:36px;border-radius:8px;border:1px solid rgba(0,0,0,.06)}
+.color-info .c-name{font-size:13px;font-weight:600}
+.color-info .c-hex{font-size:12px;color:var(--text-muted)}
+.typo-sample{margin-bottom:12px}
+.typo-sample .t-label{font-size:11px;color:var(--text-light);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.typo-sample .t-preview{font-size:20px;font-weight:600}
+.component-list{display:flex;flex-direction:column;gap:12px}
+.component-chip{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-radius:var(--radius-sm);font-size:13px;font-weight:500}
+.component-chip .chip-dot{width:8px;height:8px;border-radius:50%}
+
+/* ─── METRICS ─── */
+.metrics-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+@media(max-width:580px){.metrics-row{grid-template-columns:1fr}}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;text-align:center}
+.metric-card .metric-value{font-family:var(--font-display);font-size:40px;line-height:1;letter-spacing:-.03em;margin-bottom:8px}
+.metric-card .metric-label{font-size:13px;color:var(--text-muted);font-weight:500}
+.metric-card:nth-child(1) .metric-value{color:var(--accent)}
+.metric-card:nth-child(2) .metric-value{color:var(--blue)}
+.metric-card:nth-child(3) .metric-value{color:var(--green)}
+
+/* ─── LEARNINGS ─── */
+.learnings-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px}
+@media(max-width:680px){.learnings-grid{grid-template-columns:1fr}}
+.learning-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px}
+.learning-card h4{font-size:15px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.learning-card p{font-size:14px;color:var(--text-muted);line-height:1.6}
+
+/* ─── FOOTER CTA ─── */
+.footer-cta{padding:80px 32px;text-align:center;max-width:var(--max-w);margin:0 auto}
+.footer-cta h2{font-family:var(--font-display);font-size:clamp(24px,3vw,36px);margin-bottom:16px}
+.footer-cta p{color:var(--text-muted);font-size:16px;margin-bottom:32px}
+.cta-buttons{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:100px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s}
+.btn-primary{background:var(--text);color:var(--bg)}
+.btn-primary:hover{background:var(--accent)}
+.btn-outline{background:transparent;color:var(--text);border:1.5px solid var(--border)}
+.btn-outline:hover{border-color:var(--text)}
+
+/* ─── FOOTER ─── */
+footer{border-top:1px solid var(--border);padding:24px 32px;text-align:center;font-size:13px;color:var(--text-light)}
+
+/* ─── SCROLL ANIMATIONS ─── */
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:480px){
+  .hero{padding:120px 20px 60px}
+  .section{padding:60px 20px}
+  .phone-frame{width:160px}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-name" style="text-decoration:none;color:inherit">Naveen Prasath K.</a>
+    <div class="nav-links">
+      <a href="../../index.html">Home</a>
+      <a href="#overview">Overview</a>
+      <a href="#research">Research</a>
+      <a href="#design">Design</a>
+      <a href="#interaction">Interaction</a>
+      <a href="#results">Results</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero fade-in">
+  <div class="hero-label"><span></span>UX Case Study</div>
+  <h1>Smart Helpdesk — Facility Management Mobile App</h1>
+  <p class="hero-sub">Redesigning the end-to-end complaint and service request experience for property tenants, reducing manual input errors by 25%.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="label">Role</span>
+      <span class="value">Lead UX Designer</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">Company</span>
+      <span class="value">Nanosoft Engineers</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">Duration</span>
+      <span class="value">Aug 2022 — Oct 2023</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">Tools</span>
+      <span class="value">Figma, Adobe XD</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">Platform</span>
+      <span class="value">iOS & Android</span>
+    </div>
+  </div>
+</header>
+
+<!-- PHONE SHOWCASE -->
+<section class="showcase fade-in">
+  <div class="phone-row">
+    <div class="phone-frame">
+      <img src="home.png" alt="Smart Helpdesk home dashboard">
+      <div class="phone-caption">Home dashboard</div>
+    </div>
+    <div class="phone-frame">
+      <img src="track-details.png" alt="Request tracking details">
+      <div class="phone-caption">Track request details</div>
+    </div>
+    <div class="phone-frame">
+      <img src="submit-step3.png" alt="Multi-step complaint form">
+      <div class="phone-caption">Submit complaint</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 1: OVERVIEW -->
+<section class="section fade-in" id="overview">
+  <div class="section-num">01 — Project overview</div>
+  <h2>Digitising facility management for property tenants</h2>
+  <p class="lead">Smart Helpdesk is a multi-tenant facility management app built for Nanosoft's ERP platform. It allows property tenants to submit maintenance complaints, track service requests, manage unit details, and communicate with facility management teams — all from their mobile device.</p>
+
+  <div class="overview-grid">
+    <div class="overview-card">
+      <div class="card-label">Users</div>
+      <div class="card-value">Property tenants, facility managers, maintenance technicians</div>
+    </div>
+    <div class="overview-card">
+      <div class="card-label">Scope</div>
+      <div class="card-value">End-to-end mobile app with 25+ unique screens across 8 modules</div>
+    </div>
+    <div class="overview-card">
+      <div class="card-label">My responsibilities</div>
+      <div class="card-value">User research, wireframing, high-fidelity prototyping, interaction design, developer handoff</div>
+    </div>
+    <div class="overview-card">
+      <div class="card-label">Deliverables</div>
+      <div class="card-value">User flows, wireframes, UI kit, interactive Figma prototype, design specifications</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 2: PROBLEM & SOLUTION -->
+<section class="section fade-in" id="research">
+  <div class="section-num">02 — Research & discovery</div>
+  <h2>Understanding the pain points</h2>
+  <p class="lead">Through stakeholder interviews and analysis of the existing workflow, I identified critical friction points in how tenants report issues and track maintenance progress.</p>
+
+  <div class="ps-grid">
+    <div class="ps-card problem">
+      <h3>The problem</h3>
+      <ul>
+        <li>Tenants relied on phone calls and emails to report maintenance issues — no centralised system</li>
+        <li>No visibility into request status once submitted; tenants couldn't track progress</li>
+        <li>Manual paper-based complaint forms led to frequent data entry errors and lost requests</li>
+        <li>Property managers struggled with disconnected asset, contract, and billing information</li>
+      </ul>
+    </div>
+    <div class="ps-card solution">
+      <h3>The solution</h3>
+      <ul>
+        <li>A structured multi-step complaint submission flow that guides tenants through each field</li>
+        <li>Real-time request tracking with status updates, ETA dates, and technician assignment</li>
+        <li>Rich media capture — photos, audio recordings, video evidence — attached directly to requests</li>
+        <li>Integrated modules for units, assets, contracts, and billing in a single cohesive experience</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PERSONA -->
+  <div class="persona-card">
+    <div>
+      <div class="persona-avatar">IA</div>
+    </div>
+    <div class="persona-details">
+      <h3>Ijas Ahamed</h3>
+      <div class="role">Property Tenant — Creek Crest Grande Apartments</div>
+      <div class="quote">"When something breaks in my apartment, I just want to report it quickly and know when it'll be fixed. I shouldn't have to chase anyone for updates."</div>
+      <div class="persona-traits">
+        <span class="trait">Mobile-first</span>
+        <span class="trait">Time-constrained</span>
+        <span class="trait">Non-technical</span>
+        <span class="trait">Needs transparency</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 3: INFORMATION ARCHITECTURE -->
+<section class="section fade-in" id="ia">
+  <div class="section-num">03 — Information architecture</div>
+  <h2>Mapping the app structure</h2>
+  <p class="lead">I designed the information architecture around the tenant's primary tasks: submitting and tracking complaints. Secondary features like assets, contracts, and billing are accessible but don't compete for attention.</p>
+
+  <div class="flow-container">
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step-num">Entry</div>
+        <div class="step-name">Entity login</div>
+        <div class="step-desc">Multi-tenant access</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step">
+        <div class="step-num">Hub</div>
+        <div class="step-name">Home</div>
+        <div class="step-desc">Dashboard + actions</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step" style="border-color:var(--accent);background:var(--accent-light)">
+        <div class="step-num">Primary</div>
+        <div class="step-name">Submit</div>
+        <div class="step-desc">3-step wizard</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step" style="border-color:var(--accent);background:var(--accent-light)">
+        <div class="step-num">Primary</div>
+        <div class="step-name">Track</div>
+        <div class="step-desc">Open / Closed</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step">
+        <div class="step-num">Secondary</div>
+        <div class="step-name">My units</div>
+        <div class="step-desc">Unit details</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step">
+        <div class="step-num">Secondary</div>
+        <div class="step-name">Assets</div>
+        <div class="step-desc">Asset inventory</div>
+      </div>
+      <div class="flow-arrow"></div>
+      <div class="flow-step">
+        <div class="step-num">Secondary</div>
+        <div class="step-name">Contracts</div>
+        <div class="step-desc">Service contracts</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 4: DESIGN SYSTEM -->
+<section class="section fade-in" id="design">
+  <div class="section-num">04 — Design system</div>
+  <h2>Building a consistent visual language</h2>
+  <p class="lead">I established a design system with a teal primary colour, clean card-based layouts, and accessible typography to ensure consistency across 25+ screens.</p>
+
+  <div class="ds-grid">
+    <div class="ds-card">
+      <h4>Colour palette</h4>
+      <div class="color-row">
+        <div class="color-swatch" style="background:#0BA5A5"></div>
+        <div class="color-info"><div class="c-name">Primary — Teal</div><div class="c-hex">#0BA5A5</div></div>
+      </div>
+      <div class="color-row">
+        <div class="color-swatch" style="background:#1A1A18"></div>
+        <div class="color-info"><div class="c-name">Text — Dark</div><div class="c-hex">#1A1A18</div></div>
+      </div>
+      <div class="color-row">
+        <div class="color-swatch" style="background:#4CAF50"></div>
+        <div class="color-info"><div class="c-name">Status — Open</div><div class="c-hex">#4CAF50</div></div>
+      </div>
+      <div class="color-row">
+        <div class="color-swatch" style="background:#E8593C"></div>
+        <div class="color-info"><div class="c-name">Status — Closed</div><div class="c-hex">#E8593C</div></div>
+      </div>
+    </div>
+    <div class="ds-card">
+      <h4>Typography</h4>
+      <div class="typo-sample">
+        <div class="t-label">Heading</div>
+        <div class="t-preview" style="font-size:22px">Smart Helpdesk</div>
+      </div>
+      <div class="typo-sample">
+        <div class="t-label">Subheading</div>
+        <div class="t-preview" style="font-size:16px;font-weight:500">Good morning, Ijas</div>
+      </div>
+      <div class="typo-sample">
+        <div class="t-label">Body</div>
+        <div class="t-preview" style="font-size:14px;font-weight:400;color:var(--text-muted)">Floor tiles broken</div>
+      </div>
+      <div class="typo-sample">
+        <div class="t-label">Caption</div>
+        <div class="t-preview" style="font-size:12px;font-weight:400;color:var(--text-light)">28-22-2022, 10:33:18</div>
+      </div>
+    </div>
+    <div class="ds-card">
+      <h4>Key components</h4>
+      <div class="component-list">
+        <div class="component-chip"><div class="chip-dot" style="background:var(--accent)"></div>Step indicator (1–2–3)</div>
+        <div class="component-chip"><div class="chip-dot" style="background:var(--green)"></div>Status badges (Open/Closed)</div>
+        <div class="component-chip"><div class="chip-dot" style="background:var(--blue)"></div>Image card carousel</div>
+        <div class="component-chip"><div class="chip-dot" style="background:var(--amber)"></div>Media capture buttons</div>
+        <div class="component-chip"><div class="chip-dot" style="background:var(--purple)"></div>Signature pad</div>
+        <div class="component-chip"><div class="chip-dot" style="background:var(--coral)"></div>Action bar (Back / Next)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 5: KEY SCREENS -->
+<section class="section fade-in">
+  <div class="section-num">05 — Key screens</div>
+  <h2>Walking through the experience</h2>
+
+  <!-- Login & Home -->
+  <div class="screen-section">
+    <h3>Onboarding and home dashboard</h3>
+    <p class="screen-desc">The entity key login supports multi-tenant architecture. The home dashboard surfaces quick-action icons, announcements, and contact options — putting primary tasks within one tap.</p>
+    <div class="screen-grid">
+      <div class="screen-card">
+        <img src="login.png" alt="Login screen">
+        <div class="screen-label">Entity key login</div>
+      </div>
+      <div class="screen-card">
+        <img src="home.png" alt="Home dashboard">
+        <div class="screen-label">Home dashboard</div>
+      </div>
+      <div class="screen-card">
+        <img src="advertisements.png" alt="Advertisements listing">
+        <div class="screen-label">Announcements feed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tracking -->
+  <div class="screen-section">
+    <h3>Request tracking and details</h3>
+    <p class="screen-desc">Tenants can filter between open and closed requests at a glance. The detail view provides full transparency: request status, ETA, technician assignment, service location, and attached evidence.</p>
+    <div class="screen-grid">
+      <div class="screen-card">
+        <img src="track-requests.png" alt="Track requests list">
+        <div class="screen-label">Open / Closed toggle</div>
+      </div>
+      <div class="screen-card">
+        <img src="track-details.png" alt="Request detail view">
+        <div class="screen-label">Request detail view</div>
+      </div>
+      <div class="screen-card">
+        <img src="image-viewer.png" alt="Fullscreen image viewer">
+        <div class="screen-label">Fullscreen evidence viewer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Views -->
+  <div class="screen-section">
+    <h3>Content detail views</h3>
+    <p class="screen-desc">Bottom-sheet pattern for property and room details keeps context visible while revealing information progressively.</p>
+    <div class="screen-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+      <div class="screen-card">
+        <img src="detail-room.png" alt="Room details">
+        <div class="screen-label">Room detail sheet</div>
+      </div>
+      <div class="screen-card">
+        <img src="detail-property.png" alt="Property details">
+        <div class="screen-label">Property detail sheet</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 6: INTERACTION DEEP-DIVE -->
+<section class="section fade-in" id="interaction">
+  <div class="section-num">06 — Interaction design deep-dive</div>
+  <h2>The complaint submission flow</h2>
+  <p class="lead">The centrepiece of the app — a 3-step guided wizard that transforms a complex, error-prone process into a structured, intuitive experience.</p>
+
+  <div class="annotated">
+    <div class="annotated-phone">
+      <img src="submit-step3.png" alt="Submit complaint step 3 — Details">
+    </div>
+    <div class="annotation-list">
+      <div class="annotation-item">
+        <div class="annotation-num">1</div>
+        <div class="annotation-text">
+          <h4>Step indicator</h4>
+          <p>Visual progress through Property → Complaint → Details. Reduces cognitive load by showing where the user is and how much remains.</p>
+        </div>
+      </div>
+      <div class="annotation-item">
+        <div class="annotation-num">2</div>
+        <div class="annotation-text">
+          <h4>Multi-modal evidence capture</h4>
+          <p>Photo capture, audio recording, and video recording — three distinct channels for tenants to document issues. This reduces the need for technicians to revisit for assessment.</p>
+        </div>
+      </div>
+      <div class="annotation-item">
+        <div class="annotation-num">3</div>
+        <div class="annotation-text">
+          <h4>Scheduling with guard rails</h4>
+          <p>Date and time picker with a validation note: "Your from time should be after 1 hour from now if preferred date is today." Prevents unrealistic scheduling and reduces back-and-forth.</p>
+        </div>
+      </div>
+      <div class="annotation-item">
+        <div class="annotation-num">4</div>
+        <div class="annotation-text">
+          <h4>Digital signature</h4>
+          <p>Signature pad provides a digital confirmation of the complaint submission, adding accountability and a clear audit trail for facility management.</p>
+        </div>
+      </div>
+      <div class="annotation-item">
+        <div class="annotation-num">5</div>
+        <div class="annotation-text">
+          <h4>Progressive disclosure</h4>
+          <p>By splitting across 3 steps, the form never overwhelms. Each step has a focused purpose: select property, describe complaint, add supporting details.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 1 annotation -->
+  <div class="annotated" style="margin-top:48px">
+    <div class="annotated-phone">
+      <img src="submit-step1.png" alt="Submit complaint step 1 — Property">
+    </div>
+    <div class="annotation-list">
+      <div class="annotation-item">
+        <div class="annotation-num">1</div>
+        <div class="annotation-text">
+          <h4>Step 1: Property selection</h4>
+          <p>The first step collects property-specific information through structured input fields. Each field is clearly labeled with a floating label pattern for context.</p>
+        </div>
+      </div>
+      <div class="annotation-item">
+        <div class="annotation-num">2</div>
+        <div class="annotation-text">
+          <h4>Consistent navigation</h4>
+          <p>Back and Next buttons remain fixed at the bottom, providing a predictable interaction pattern. Users always know how to progress or retreat.</p>
+        </div>
+      </div>
+      <div class="annotation-item">
+        <div class="annotation-num">3</div>
+        <div class="annotation-text">
+          <h4>Error prevention over error correction</h4>
+          <p>Required fields are clearly marked with asterisks. The teal underline indicates the active input state, providing immediate visual feedback during data entry.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SECTION 7: RESULTS -->
+<section class="section fade-in" id="results">
+  <div class="section-num">07 — Results & reflection</div>
+  <h2>Measurable impact</h2>
+  <p class="lead">The redesigned Smart Helpdesk delivered measurable improvements in efficiency and user satisfaction after deployment.</p>
+
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="metric-value">25%</div>
+      <div class="metric-label">Reduction in manual input errors through structured form wizards</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">8+</div>
+      <div class="metric-label">Integrated modules unified into a single mobile experience</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">25+</div>
+      <div class="metric-label">Unique screens designed end-to-end from research to handoff</div>
+    </div>
+  </div>
+
+  <!-- Learnings -->
+  <div class="learnings-grid">
+    <div class="learning-card">
+      <h4>What I learned</h4>
+      <p>Designing for enterprise users taught me that simplicity in complex domains is about progressive disclosure — showing the right information at the right time, not hiding complexity entirely. The multi-step wizard pattern was the single most impactful decision in reducing errors.</p>
+    </div>
+    <div class="learning-card">
+      <h4>What I'd do differently</h4>
+      <p>With more time, I would have conducted formal usability testing sessions with real tenants before handoff. I'd also explore offline-first capabilities for areas with poor network connectivity, which is common in large facilities.</p>
+    </div>
+    <div class="learning-card">
+      <h4>Human factors thinking</h4>
+      <p>This project strengthened my approach to error prevention over error correction — a principle I carry into every design. The structured inputs, validation guard rails, and digital signature all serve to reduce use errors before they happen.</p>
+    </div>
+    <div class="learning-card">
+      <h4>Cross-functional collaboration</h4>
+      <p>Working closely with backend developers on the ERP integration taught me how data architecture shapes the user experience. Understanding the technical constraints early allowed me to design feasible solutions from day one.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FOOTER CTA -->
+<section class="footer-cta fade-in">
+  <h2>Let's work together</h2>
+  <p>I'm currently looking for UX, Human Factors, and Product Design roles.</p>
+  <div class="cta-buttons">
+    <a href="mailto:naveenprasath479@gmail.com" class="btn btn-primary">Get in touch →</a>
+    <a href="https://linkedin.com/in/naveen-prasath-kanakaraj-961132168" class="btn btn-outline" target="_blank" rel="noopener">LinkedIn ↗</a>
+  </div>
+</section>
+
+<footer>
+  <p>Designed & built by Naveen Prasath Kanakaraj — 2026</p>
+</footer>
+
+<script>
+// Scroll-triggered fade-in
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
