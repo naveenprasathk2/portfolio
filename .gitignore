@@ -1,0 +1,9 @@
+.DS_Store
+*.xlsx
+*.~lock*
+Figma/
+Resumes/
+.claude/
+portfolio.html
+Portfolio/Helpdesk/Helpdesk.pdf
+Portfolio/Helpdesk/portfolio-helpdesk.pdf
