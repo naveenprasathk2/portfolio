@@ -124,9 +124,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-he
 /* PHONE SHOWCASE */
 .showcase{padding:0 32px 80px;max-width:var(--max-w);margin:0 auto}
 .phone-row{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
-.phone-frame{width:200px;flex-shrink:0;background:var(--surface);border-radius:28px;padding:8px;box-shadow:0 4px 40px rgba(0,0,0,.08),0 1px 3px rgba(0,0,0,.04);transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.phone-frame{width:200px;flex-shrink:0;background:var(--surface);border-radius:28px;padding:8px;box-shadow:0 4px 40px rgba(0,0,0,.08),0 1px 3px rgba(0,0,0,.04);transition:transform .4s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column}
 .phone-frame:hover{transform:translateY(-8px)}
-.phone-frame img{width:100%;border-radius:20px;display:block}
+.phone-frame .img-wrap{width:100%;height:380px;border-radius:20px;overflow:hidden;flex-shrink:0}
+.phone-frame img{width:100%;height:100%;border-radius:20px;display:block;object-fit:cover;object-position:top}
 .phone-caption{text-align:center;margin-top:10px;font-size:11px;color:var(--text-muted);font-weight:500;padding-bottom:4px}
 
 /* SCREEN GALLERY */
@@ -190,23 +191,23 @@ footer{border-top:1px solid var(--border);padding:24px 32px;text-align:center;fo
 <section class="showcase fade-in">
   <div class="phone-row">
     <div class="phone-frame">
-      <img src="school-home.png" alt="Home dashboard">
+      <div class="img-wrap"><img src="school-home.png" alt="Home dashboard"></div>
       <div class="phone-caption">Home dashboard</div>
     </div>
     <div class="phone-frame">
-      <img src="school-attendance.png" alt="Attendance calendar">
+      <div class="img-wrap"><img src="school-attendance.png" alt="Attendance calendar"></div>
       <div class="phone-caption">Attendance calendar</div>
     </div>
     <div class="phone-frame">
-      <img src="school-exam.png" alt="Exam schedule">
+      <div class="img-wrap"><img src="school-exam.png" alt="Exam schedule"></div>
       <div class="phone-caption">Exam schedule</div>
     </div>
     <div class="phone-frame">
-      <img src="school-syllabus.png" alt="Syllabus progress">
+      <div class="img-wrap"><img src="school-syllabus.png" alt="Syllabus progress"></div>
       <div class="phone-caption">Syllabus tracker</div>
     </div>
     <div class="phone-frame">
-      <img src="school-leave.png" alt="Leave management">
+      <div class="img-wrap"><img src="school-leave.png" alt="Leave management"></div>
       <div class="phone-caption">Leave management</div>
     </div>
   </div>
